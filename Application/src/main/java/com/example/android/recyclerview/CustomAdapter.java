@@ -56,8 +56,6 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private int totalItemCount;
 
-    private SparseArray<User> mSparseArray = null;
-
     private OnLoadMoreListener mOnLoadMoreListener;
 
     private ArrayList<User> users = null;
@@ -89,6 +87,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
                 if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                     if (mOnLoadMoreListener != null) {
+                        showLoading();
                         mOnLoadMoreListener.onLoadMore();
                     }
                     isLoading = true;
@@ -191,6 +190,11 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void loadMoreComplete(){
         notifyDataSetChanged();
         setLoaded();
+    }
+
+    public void addItem(User item,int position){
+        users.add(position,item);
+        notifyItemInserted(position);
     }
 
     /**

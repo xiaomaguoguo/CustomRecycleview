@@ -18,6 +18,8 @@ package com.example.android.recyclerview;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v17.leanback.widget.ArrayObjectAdapter;
+import android.support.v17.leanback.widget.ItemBridgeAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,10 +27,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RadioButton;
 
 import com.example.android.User;
 import com.example.android.callback.OnLoadMoreListener;
+import com.example.android.presenter.HeaderPresenter;
+import com.example.android.presenter.LoadingPresenter;
+import com.example.android.presenter.MyPresenterSelector;
+import com.example.android.presenter.NormalPresenter;
 
 import java.util.ArrayList;
 
@@ -39,9 +46,8 @@ import java.util.ArrayList;
 public class RecyclerViewFragment extends Fragment {
 
     private static final String TAG = "RecyclerViewFragment";
-    private static final String KEY_LAYOUT_MANAGER = "layoutManager";
     private static final int SPAN_COUNT = 2;
-    private static final int DATASET_COUNT = 60;
+    private static final int DATASET_COUNT = 10;
 
     private enum LayoutManagerType {
         GRID_LAYOUT_MANAGER,
@@ -57,43 +63,25 @@ public class RecyclerViewFragment extends Fragment {
     protected CustomAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected ArrayList mDataset;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Initialize dataset, this data would usually come from a local content provider or
-        // remote server.
-        initDataset();
-    }
+    private Button btn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.recycler_view_frag, container, false);
-        rootView.setTag(TAG);
-
-        // BEGIN_INCLUDE(initializeRecyclerView)
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        btn = (Button)rootView.findViewById(R.id.btn);
 
-        // LinearLayoutManager is used here, this will layout the elements in a similar fashion
-        // to the way ListView would layout elements. The RecyclerView.LayoutManager defines how
-        // elements are laid out.
         mLayoutManager = new LinearLayoutManager(getActivity());
-
         mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-
-        if (savedInstanceState != null) {
-            // Restore saved layout manager type.
-            mCurrentLayoutManagerType = (LayoutManagerType) savedInstanceState
-                    .getSerializable(KEY_LAYOUT_MANAGER);
-        }
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
 
-        mAdapter = new CustomAdapter(mDataset,mRecyclerView, (LinearLayoutManager) mLayoutManager);
-        // Set CustomAdapter as the adapter for RecyclerView.
-        mRecyclerView.setAdapter(mAdapter);
-        // END_INCLUDE(initializeRecyclerView)
+//        mDataset = new ArrayList();
+//        mDataset.add(null);
+//        mAdapter = new CustomAdapter(mDataset,mRecyclerView, (LinearLayoutManager) mLayoutManager);
+//        buildData();
+//        mRecyclerView.setAdapter(mAdapter);
 
         mLinearLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.linear_layout_rb);
         mLinearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
@@ -111,27 +99,45 @@ public class RecyclerViewFragment extends Fragment {
             }
         });
 
-        mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+//        mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+//            @Override
+//            public void onLoadMore() {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override public void run() {
+//                        mAdapter.hideLoading();
+//                        buildData();
+//                        mAdapter.loadMoreComplete();
+//                    }
+//                }, 5000);
+//            }
+//        });
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onLoadMore() {
-                mAdapter.showLoading();
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        mAdapter.hideLoading();
-                        buildData();
-                        mAdapter.loadMoreComplete();
-                    }
-                }, 5000);
+            public void onClick(View v) {
+                for (int i = 0; i < DATASET_COUNT; i++) {
+                    User user = new User();
+                    user.setEmail("fuck@163.com");
+                    user.setName("BBBBB = ");
+                    mDataset.add(user);
+                }
+                mAdapter.notifyItemInserted(mDataset.size()-2);
             }
         });
+        MyPresenterSelector presenterSelector = new MyPresenterSelector();
+        presenterSelector.addPresenter(0,new HeaderPresenter());
+        presenterSelector.addPresenter(1,new NormalPresenter());
+        presenterSelector.addPresenter(2,new LoadingPresenter());
+        ArrayObjectAdapter arrayObjectAdapter = new ArrayObjectAdapter(presenterSelector);
+        arrayObjectAdapter.add(0);
+        for(int i=0;i<20;i++){
+            arrayObjectAdapter.add(1);
+        }
+        arrayObjectAdapter.add(2);
+        mRecyclerView.setAdapter(new ItemBridgeAdapter(arrayObjectAdapter));
+
         return rootView;
     }
 
-    /**
-     * Set RecyclerView's LayoutManager to the one given.
-     *
-     * @param layoutManagerType Type of layout manager to switch to.
-     */
     public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
         int scrollPosition = 0;
 
@@ -159,29 +165,19 @@ public class RecyclerViewFragment extends Fragment {
         mRecyclerView.scrollToPosition(scrollPosition);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save currently selected layout manager.
-        savedInstanceState.putSerializable(KEY_LAYOUT_MANAGER, mCurrentLayoutManagerType);
-        super.onSaveInstanceState(savedInstanceState);
-    }
 
-    /**
-     * Generates Strings for RecyclerView's adapter. This data would usually come
-     * from a local content provider or remote server.
-     */
-    private void initDataset() {
-        mDataset = new ArrayList();
-        mDataset.add(null);
-        buildData();
-    }
-
+    int j=0;
     private void buildData(){
         for (int i = 0; i < DATASET_COUNT; i++) {
+            j++;
             User user = new User();
             user.setEmail("fuck@163.com");
-            user.setName("KKKK");
+            user.setName("KKKK = " + j);
             mDataset.add(user);
+            mAdapter.notifyItemInserted(mDataset.size()-2);
         }
+//        mAdapter.notifyItemInserted(mDataset.size());
+//        mAdapter.notifyDataSetChanged();
+//        mAdapter.notifyItemRangeInserted(mDataset.size()-2,10);
     }
 }
