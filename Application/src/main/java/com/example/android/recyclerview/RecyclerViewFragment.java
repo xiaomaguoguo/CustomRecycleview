@@ -17,7 +17,6 @@
 package com.example.android.recyclerview;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ItemBridgeAdapter;
 import android.support.v4.app.Fragment;
@@ -31,7 +30,6 @@ import android.widget.Button;
 import android.widget.RadioButton;
 
 import com.example.android.User;
-import com.example.android.callback.OnLoadMoreListener;
 import com.example.android.presenter.HeaderPresenter;
 import com.example.android.presenter.LoadingPresenter;
 import com.example.android.presenter.MyPresenterSelector;
