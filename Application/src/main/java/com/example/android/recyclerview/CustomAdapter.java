@@ -16,19 +16,46 @@
 
 package com.example.android.recyclerview;
 
-import com.example.android.common.logger.Log;
-
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.User;
+import com.example.android.callback.OnLoadMoreListener;
+import com.example.android.common.logger.Log;
+import com.example.android.viewholder.LoadingViewHolder;
+import com.example.android.viewholder.UserViewHolder;
+
 /**
  * Provide views to RecyclerView with data from mDataSet.
  */
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
+public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
     private static final String TAG = "CustomAdapter";
+
+    private static final int VIEW_TYPE_ITEM = 0;
+
+    private static final int VIEW_TYPE_LOADING = 1;
+
+    private static final int VIEW_TYPE_HEADER = 2;
+
+    private static final int VIEW_TYPE_FOOTER = 3;
+
+    private boolean isLoading = false;
+
+    private int visibleThreshold = 5;
+    private int lastVisibleItem, totalItemCount;
+
+    private SparseArray<User> mSparseArray = null;
+
+    private OnLoadMoreListener mOnLoadMoreListener;
+
+    public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
+        this.mOnLoadMoreListener = mOnLoadMoreListener;
+    }
 
     private String[] mDataSet;
 
@@ -37,6 +64,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
      * Provide a reference to the type of views that you are using (custom ViewHolder)
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         private final TextView textView;
 
         public ViewHolder(View v) {
@@ -64,35 +92,76 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
      */
     public CustomAdapter(String[] dataSet) {
         mDataSet = dataSet;
+//        this.mRecyclerView = recyclerView;
+//        this.mManager = (GridLayoutManager) recyclerView.getLayoutManager();
+//
+//        mManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//            @Override
+//            public int getSpanSize(int position) {
+//                return getItemViewType(position) == VIEW_LOADING ? mManager.getSpanCount() : 1;
+//            }
+//        });
     }
 
     // BEGIN_INCLUDE(recyclerViewOnCreateViewHolder)
     // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        // Create a new view.
-        View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.text_row_item, viewGroup, false);
+
+        switch (viewType){
+
+            case VIEW_TYPE_HEADER:
+                break;
+
+            case VIEW_TYPE_ITEM:
+                break;
+
+            case VIEW_TYPE_LOADING:
+                break;
+
+            case VIEW_TYPE_FOOTER:
+                break;
+
+            default:
+                break;
+        }
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.text_row_item, viewGroup, false);
 
         return new ViewHolder(v);
     }
-    // END_INCLUDE(recyclerViewOnCreateViewHolder)
 
-    // BEGIN_INCLUDE(recyclerViewOnBindViewHolder)
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Log.d(TAG, "Element " + position + " set.");
 
-        // Get element from your dataset at this position and replace the contents of the view
-        // with that element
-        viewHolder.getTextView().setText(mDataSet[position]);
+        if(holder instanceof UserViewHolder){
+            User user = null;
+            UserViewHolder userViewHolder = (UserViewHolder) holder;
+            userViewHolder.tvName.setText(user.getName());
+        }else if (holder instanceof LoadingViewHolder){
+            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
+            loadingViewHolder.progressBar.setIndeterminate(true);
+        }
     }
-    // END_INCLUDE(recyclerViewOnBindViewHolder)
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mDataSet.length;
     }
+
+//    @Override public int getItemCount() {
+//        return mUsers == null ? 0 : mUsers.size();
+//    }
+
+    public void setLoaded() {
+        isLoading = false;
+    }
+
+    @Override public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+//    @Override public int getItemViewType(int position) {
+//        return mUsers.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+//    }
 }

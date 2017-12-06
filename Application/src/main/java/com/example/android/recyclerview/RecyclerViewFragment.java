@@ -26,6 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
+import com.example.android.callback.OnLoadMoreListener;
+
 /**
  * Demonstrates the use of {@link RecyclerView} with a {@link LinearLayoutManager} and a
  * {@link GridLayoutManager}.
@@ -105,6 +107,53 @@ public class RecyclerViewFragment extends Fragment {
             }
         });
 
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                totalItemCount = mLayoutManager.getItemCount();
+                lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                    if (mOnLoadMoreListener != null) {
+                        mOnLoadMoreListener.onLoadMore();
+                    }
+                    isLoading = true;
+                }
+            }
+
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//            }
+        });
+
+        mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+//                mUsers.add(null);
+//                mUserAdapter.notifyItemInserted(mUsers.size() - 1);
+//                //Load more data for reyclerview
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override public void run() {
+//                        Log.e("haint", "Load More 2");
+//                        //Remove loading item
+//                        mUsers.remove(mUsers.size() - 1);
+//                        mUserAdapter.notifyItemRemoved(mUsers.size());
+//                        //Load data
+//                        int index = mUsers.size();
+//                        int end = index + 20;
+//                        for (int i = index; i < end; i++) {
+//                            User user = new User();
+//                            user.setName("Name " + i);
+//                            user.setEmail("alibaba" + i + "@gmail.com");
+//                            mUsers.add(user);
+//                        }
+//                        mUserAdapter.notifyDataSetChanged();
+//                        mUserAdapter.setLoaded();
+//                    }
+//                }, 5000);
+//            }
+        });
         return rootView;
     }
 
