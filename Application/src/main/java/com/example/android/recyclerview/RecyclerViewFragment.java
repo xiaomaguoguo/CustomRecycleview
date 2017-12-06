@@ -17,6 +17,7 @@
 package com.example.android.recyclerview;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +27,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
+import com.example.android.User;
 import com.example.android.callback.OnLoadMoreListener;
+
+import java.util.ArrayList;
 
 /**
  * Demonstrates the use of {@link RecyclerView} with a {@link LinearLayoutManager} and a
@@ -52,7 +56,7 @@ public class RecyclerViewFragment extends Fragment {
     protected RecyclerView mRecyclerView;
     protected CustomAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    protected String[] mDataset;
+    protected ArrayList mDataset;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,7 +90,7 @@ public class RecyclerViewFragment extends Fragment {
         }
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
 
-        mAdapter = new CustomAdapter(mDataset);
+        mAdapter = new CustomAdapter(mDataset,mRecyclerView, (LinearLayoutManager) mLayoutManager);
         // Set CustomAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mAdapter);
         // END_INCLUDE(initializeRecyclerView)
@@ -107,52 +111,18 @@ public class RecyclerViewFragment extends Fragment {
             }
         });
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                totalItemCount = mLayoutManager.getItemCount();
-                lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
-                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                    if (mOnLoadMoreListener != null) {
-                        mOnLoadMoreListener.onLoadMore();
-                    }
-                    isLoading = true;
-                }
-            }
-
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//            }
-        });
-
         mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-//                mUsers.add(null);
-//                mUserAdapter.notifyItemInserted(mUsers.size() - 1);
-//                //Load more data for reyclerview
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override public void run() {
-//                        Log.e("haint", "Load More 2");
-//                        //Remove loading item
-//                        mUsers.remove(mUsers.size() - 1);
-//                        mUserAdapter.notifyItemRemoved(mUsers.size());
-//                        //Load data
-//                        int index = mUsers.size();
-//                        int end = index + 20;
-//                        for (int i = index; i < end; i++) {
-//                            User user = new User();
-//                            user.setName("Name " + i);
-//                            user.setEmail("alibaba" + i + "@gmail.com");
-//                            mUsers.add(user);
-//                        }
-//                        mUserAdapter.notifyDataSetChanged();
-//                        mUserAdapter.setLoaded();
-//                    }
-//                }, 5000);
-//            }
+                mAdapter.showLoading();
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        mAdapter.hideLoading();
+                        buildData();
+                        mAdapter.loadMoreComplete();
+                    }
+                }, 5000);
+            }
         });
         return rootView;
     }
@@ -201,9 +171,17 @@ public class RecyclerViewFragment extends Fragment {
      * from a local content provider or remote server.
      */
     private void initDataset() {
-        mDataset = new String[DATASET_COUNT];
+        mDataset = new ArrayList();
+        mDataset.add(null);
+        buildData();
+    }
+
+    private void buildData(){
         for (int i = 0; i < DATASET_COUNT; i++) {
-            mDataset[i] = "This is element #" + i;
+            User user = new User();
+            user.setEmail("fuck@163.com");
+            user.setName("KKKK");
+            mDataset.add(user);
         }
     }
 }

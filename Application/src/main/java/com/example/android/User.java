@@ -6,6 +6,7 @@ package com.example.android;
 
 public class User {
 
+    private int itemType = 0;
     private String name;
     private String email;
     public String getName() {
@@ -21,4 +22,11 @@ public class User {
         this.email = email;
     }
 
+    public int getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(int itemType) {
+        this.itemType = itemType;
+    }
 }

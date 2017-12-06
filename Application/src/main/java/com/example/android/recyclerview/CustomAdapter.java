@@ -16,18 +16,22 @@
 
 package com.example.android.recyclerview;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.android.User;
 import com.example.android.callback.OnLoadMoreListener;
 import com.example.android.common.logger.Log;
+import com.example.android.viewholder.FooterViewHolder;
+import com.example.android.viewholder.HeaderViewHolder;
+import com.example.android.viewholder.ItemViewHolder;
 import com.example.android.viewholder.LoadingViewHolder;
-import com.example.android.viewholder.UserViewHolder;
+
+import java.util.ArrayList;
 
 /**
  * Provide views to RecyclerView with data from mDataSet.
@@ -47,121 +51,163 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private boolean isLoading = false;
 
     private int visibleThreshold = 5;
-    private int lastVisibleItem, totalItemCount;
+
+    private int lastVisibleItem;
+
+    private int totalItemCount;
 
     private SparseArray<User> mSparseArray = null;
 
     private OnLoadMoreListener mOnLoadMoreListener;
 
-    public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
-        this.mOnLoadMoreListener = mOnLoadMoreListener;
-    }
+    private ArrayList<User> users = null;
 
-    private String[] mDataSet;
+    private RecyclerView.ViewHolder viewHolder = null;
 
-    // BEGIN_INCLUDE(recyclerViewSampleViewHolder)
-    /**
-     * Provide a reference to the type of views that you are using (custom ViewHolder)
-     */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    private View headerView,footerView,loadingView;
 
-        private final TextView textView;
+    private RecyclerView mRecyclerView = null;
 
-        public ViewHolder(View v) {
-            super(v);
-            // Define click listener for the ViewHolder's View.
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
-                }
-            });
-            textView = (TextView) v.findViewById(R.id.textView);
-        }
+    private LinearLayoutManager mLayoutManager = null;
 
-        public TextView getTextView() {
-            return textView;
-        }
-    }
-    // END_INCLUDE(recyclerViewSampleViewHolder)
-
-    /**
-     * Initialize the dataset of the Adapter.
-     *
-     * @param dataSet String[] containing the data to populate views to be used by RecyclerView.
-     */
-    public CustomAdapter(String[] dataSet) {
-        mDataSet = dataSet;
-//        this.mRecyclerView = recyclerView;
+    public CustomAdapter(ArrayList<User> users, RecyclerView recyclerView, LinearLayoutManager layoutManager) {
+        this.users = users;
+        this.mRecyclerView = recyclerView;
+        this.mLayoutManager = layoutManager;
 //        this.mManager = (GridLayoutManager) recyclerView.getLayoutManager();
-//
 //        mManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
 //            @Override
 //            public int getSpanSize(int position) {
 //                return getItemViewType(position) == VIEW_LOADING ? mManager.getSpanCount() : 1;
 //            }
 //        });
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                totalItemCount = mLayoutManager.getItemCount();
+                lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                    if (mOnLoadMoreListener != null) {
+                        mOnLoadMoreListener.onLoadMore();
+                    }
+                    isLoading = true;
+                }
+            }
+        });
     }
 
-    // BEGIN_INCLUDE(recyclerViewOnCreateViewHolder)
-    // Create new views (invoked by the layout manager)
+    public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
+        this.mOnLoadMoreListener = mOnLoadMoreListener;
+    }
+
+    public void setCustomView(View headerView,View footerView,View loadingView){
+        this.headerView = headerView;
+        this.footerView = footerView;
+        this.loadingView = loadingView;
+    }
+
+
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         switch (viewType){
 
             case VIEW_TYPE_HEADER:
+                viewHolder = new HeaderViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_header, viewGroup, false));
                 break;
 
             case VIEW_TYPE_ITEM:
+                viewHolder = new ItemViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.text_row_item, viewGroup, false));
                 break;
 
             case VIEW_TYPE_LOADING:
+                viewHolder = new LoadingViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_loading_item, viewGroup, false));
                 break;
 
             case VIEW_TYPE_FOOTER:
+                viewHolder = new FooterViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_footer, viewGroup, false));
                 break;
 
             default:
                 break;
         }
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.text_row_item, viewGroup, false);
 
-        return new ViewHolder(v);
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Log.d(TAG, "Element " + position + " set.");
+        User user = users.get(position);
+        if (holder instanceof HeaderViewHolder){
 
-        if(holder instanceof UserViewHolder){
-            User user = null;
-            UserViewHolder userViewHolder = (UserViewHolder) holder;
-            userViewHolder.tvName.setText(user.getName());
-        }else if (holder instanceof LoadingViewHolder){
+        }else if (holder instanceof ItemViewHolder){
+            ItemViewHolder userViewHolder = (ItemViewHolder) holder;
+            userViewHolder.getTextView().setText(user.getName());
+        }else if (holder instanceof FooterViewHolder){
+
+        }else {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);
         }
     }
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataSet.length;
+        return users == null ? 0 : users.size() + convertExtItemCount();
     }
-
-//    @Override public int getItemCount() {
-//        return mUsers == null ? 0 : mUsers.size();
-//    }
 
     public void setLoaded() {
         isLoading = false;
     }
 
-    @Override public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+    @Override
+    public int getItemViewType(int position) {
+
+        if (users.get(position) == null){
+            return VIEW_TYPE_HEADER;
+        }
+
+        if (users.get(position).getItemType() == 2){
+            return VIEW_TYPE_LOADING;
+        }
+
+        return VIEW_TYPE_ITEM;
+//        return super.getItemViewType(position);
     }
 
-//    @Override public int getItemViewType(int position) {
-//        return mUsers.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
-//    }
+    public void showLoading(){
+        User loading = new User();
+        loading.setItemType(2);
+        users.add(loading);
+        notifyItemInserted(users.size() - 1);
+    }
+
+    public void hideLoading(){
+        users.remove(users.size() - 1);
+        notifyItemRemoved(users.size());
+    }
+
+    public void loadMoreComplete(){
+        notifyDataSetChanged();
+        setLoaded();
+    }
+
+    /**
+     * 计算多余的item数
+     * @return
+     */
+    private final int convertExtItemCount(){
+        int extItem = 0;
+        if (headerView != null){
+            extItem++;
+        }
+        if (loadingView != null){
+            extItem++;
+        }
+        if (footerView != null){
+            extItem++;
+        }
+        return extItem;
+    }
 }
