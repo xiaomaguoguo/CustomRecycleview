@@ -9,18 +9,9 @@ import java.util.ArrayList;
 /**
  * Created by MaZhihua on 2017/12/6.
  */
-
 public class MyPresenterSelector extends PresenterSelector {
 
     private ArrayMap<Object,Presenter> mPresenters = null;
-
-    public static final int VIEW_TYPE_HEADER = 0;
-
-    public static final int VIEW_TYPE_ITEM = 1;
-
-    public static final int VIEW_TYPE_LOADING = 2;
-
-    public static final int VIEW_TYPE_FOOTER = 3;
 
     public MyPresenterSelector() {
         this.mPresenters = new ArrayMap<>(3);

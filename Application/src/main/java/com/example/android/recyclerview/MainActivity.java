@@ -53,16 +53,16 @@ public class MainActivity extends FragmentActivity {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             RecyclerViewFragment fragment = new RecyclerViewFragment();
             RecyclerViewFragment2 fragment2 = new RecyclerViewFragment2();
-            transaction.replace(R.id.sample_content_fragment, fragment);
+            transaction.replace(R.id.sample_content_fragment, fragment2);
             transaction.commit();
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
 
     /*@Override
     public boolean onPrepareOptionsMenu(Menu menu) {

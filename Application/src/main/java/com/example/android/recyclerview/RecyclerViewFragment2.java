@@ -21,8 +21,6 @@ import android.os.Handler;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ItemBridgeAdapter;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +29,8 @@ import android.widget.Button;
 import android.widget.RadioButton;
 
 import com.example.android.callback.OnLoadMoreListener;
+import com.example.android.layoutmanager.MyGridLayoutManager;
+import com.example.android.layoutmanager.MyLinearLayoutManager;
 import com.example.android.model.Footer;
 import com.example.android.model.Header;
 import com.example.android.model.Item;
@@ -39,8 +39,6 @@ import com.example.android.presenter.LoadingPresenter;
 import com.example.android.presenter.MyPresenterSelector;
 import com.example.android.presenter.NormalPresenter;
 import com.example.android.widget.MyRecycleView;
-
-import java.util.ArrayList;
 
 public class RecyclerViewFragment2 extends Fragment {
 
@@ -65,8 +63,8 @@ public class RecyclerViewFragment2 extends Fragment {
         View rootView = inflater.inflate(R.layout.recycler_view_frag, container, false);
         mRecyclerView = (MyRecycleView) rootView.findViewById(R.id.recyclerView);
         btn = (Button)rootView.findViewById(R.id.btn);
-
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        
+        mLayoutManager = new MyLinearLayoutManager(getActivity());
         mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
 
@@ -124,7 +122,7 @@ public class RecyclerViewFragment2 extends Fragment {
                         itemBridgeAdapter.notifyItemInserted(itemBridgeAdapter.getItemCount()-2);
 //                        mAdapter.notifyItemInserted(mDataset.size()-2);
                         arrayObjectAdapter.remove(footer);
-                        mRecyclerView.setLoaded();
+                        mRecyclerView.loadComplete();
                     }
                 },2000);
             }
@@ -204,20 +202,20 @@ public class RecyclerViewFragment2 extends Fragment {
 
         // If a layout manager has already been set, get current scroll position.
         if (mRecyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+            scrollPosition = ((MyLinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
         }
 
         switch (layoutManagerType) {
             case GRID_LAYOUT_MANAGER:
-                mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
+                mLayoutManager = new MyGridLayoutManager(getActivity(), SPAN_COUNT);
                 mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
                 break;
             case LINEAR_LAYOUT_MANAGER:
-                mLayoutManager = new LinearLayoutManager(getActivity());
+                mLayoutManager = new MyLinearLayoutManager(getActivity());
                 mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
                 break;
             default:
-                mLayoutManager = new LinearLayoutManager(getActivity());
+                mLayoutManager = new MyLinearLayoutManager(getActivity());
                 mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
         }
 

@@ -7,16 +7,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.recyclerview.R;
-import com.example.android.viewholder.HeaderViewHolder;
 
 /**
  * Created by MaZhihua on 2017/12/6.
  */
-public class HeaderPresenter extends Presenter {
-
+public class NoMorePresenter extends Presenter {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_header, parent, false));
+        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_nomore, parent, false));
     }
 
     @Override

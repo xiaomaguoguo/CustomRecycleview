@@ -18,8 +18,19 @@ import com.example.android.callback.OnLoadMoreListener;
 
 public class MyRecycleView extends RecyclerView {
 
+    /**
+     * 是否正在加载
+     */
     private boolean isLoading = false;
 
+    /**
+     * 是否自动加载下一页
+     */
+    private boolean isAutoLoadMore = true;
+
+    /**
+     * 加载更多回调
+     */
     private OnLoadMoreListener mOnLoadMoreListener;
 
     public MyRecycleView(Context context) {
@@ -35,15 +46,10 @@ public class MyRecycleView extends RecyclerView {
     }
 
     @Override
-    public boolean requestChildRectangleOnScreen(View child, Rect rect, boolean immediate) {
-        return super.requestChildRectangleOnScreen(child, rect, immediate);
-    }
-
-    @Override
     public void onScrollStateChanged(int state) {
         super.onScrollStateChanged(state);
-        if (state == SCROLL_STATE_IDLE){
-            if (!isLoading && getChildCount() <= (findLastVisibleItemPosition() + 1)) {
+        if (state == SCROLL_STATE_IDLE && isAutoLoadMore){
+            if (!isLoading && getChildCount() <= (findLastVisibleItemPosition())) {
                 if (mOnLoadMoreListener != null) {
                     Log.d("KKK","IDLE =========");
                     mOnLoadMoreListener.onLoadMore();
@@ -53,10 +59,18 @@ public class MyRecycleView extends RecyclerView {
         }
     }
 
+    /**
+     * 设置加载更多回调
+     * @param mOnLoadMoreListener
+     */
     public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
         this.mOnLoadMoreListener = mOnLoadMoreListener;
     }
 
+    /**
+     * 查找最后一荐可见item position
+     * @return
+     */
     public int findLastVisibleItemPosition(){
         LayoutManager layoutManager = getLayoutManager();
         if(layoutManager instanceof GridLayoutManager){
@@ -67,7 +81,19 @@ public class MyRecycleView extends RecyclerView {
         return 0;
     }
 
-    public void setLoaded() {
+
+    /**
+     * 加载完成
+     */
+    public void loadComplete() {
         isLoading = false;
+    }
+
+    /**
+     * 设置是否自动加载更多
+     * @param isAutoLoadMore, true:自动加载，false:不自动加载
+     */
+    public void setAutoLoadMoreEnable(boolean isAutoLoadMore){
+        this.isAutoLoadMore = isAutoLoadMore;
     }
 }
