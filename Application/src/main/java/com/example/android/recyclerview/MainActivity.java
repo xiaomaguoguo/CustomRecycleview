@@ -52,6 +52,7 @@ public class MainActivity extends FragmentActivity {
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             RecyclerViewFragment fragment = new RecyclerViewFragment();
+            RecyclerViewFragment2 fragment2 = new RecyclerViewFragment2();
             transaction.replace(R.id.sample_content_fragment, fragment);
             transaction.commit();
         }

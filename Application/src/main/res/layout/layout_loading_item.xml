@@ -5,9 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#443355"
-    android:orientation="vertical" >
+    android:gravity="center"
+    android:orientation="horizontal" >
     <ProgressBar android:id="@+id/progressBar1"
                  android:layout_width="wrap_content"
-                 android:layout_gravity="center_horizontal"
                  android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginLeft="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:text="正在加载...."/>
 </LinearLayout>

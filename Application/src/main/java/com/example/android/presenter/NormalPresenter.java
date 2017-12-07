@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.common.logger.Log;
+import com.example.android.model.Item;
 import com.example.android.recyclerview.R;
 
 /**
@@ -22,7 +23,9 @@ public class NormalPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
-
+        NormalItem normalItem = (NormalItem) viewHolder;
+        Item item1 = (Item) item;
+        normalItem.getTextView().setText(item1.getI()+" AAAAAAA");
     }
 
     @Override

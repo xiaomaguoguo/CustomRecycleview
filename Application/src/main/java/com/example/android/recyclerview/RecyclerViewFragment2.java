@@ -31,49 +31,44 @@ import android.widget.Button;
 import android.widget.RadioButton;
 
 import com.example.android.callback.OnLoadMoreListener;
-import com.example.android.model.User;
+import com.example.android.model.Footer;
+import com.example.android.model.Header;
+import com.example.android.model.Item;
+import com.example.android.presenter.HeaderPresenter;
+import com.example.android.presenter.LoadingPresenter;
+import com.example.android.presenter.MyPresenterSelector;
+import com.example.android.presenter.NormalPresenter;
+import com.example.android.widget.MyRecycleView;
 
 import java.util.ArrayList;
 
-public class RecyclerViewFragment extends Fragment {
+public class RecyclerViewFragment2 extends Fragment {
 
-    private static final String TAG = "RecyclerViewFragment";
     private static final int SPAN_COUNT = 2;
-    private static final int DATASET_COUNT = 10;
 
-    private enum LayoutManagerType {
-        GRID_LAYOUT_MANAGER,
-        LINEAR_LAYOUT_MANAGER
-    }
+    private enum LayoutManagerType {GRID_LAYOUT_MANAGER, LINEAR_LAYOUT_MANAGER}
 
     protected LayoutManagerType mCurrentLayoutManagerType;
 
     protected RadioButton mLinearLayoutRadioButton;
     protected RadioButton mGridLayoutRadioButton;
 
-    protected RecyclerView mRecyclerView;
-    protected CustomAdapter mAdapter;
+    protected MyRecycleView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
-    protected ArrayList mDataset;
     private Button btn;
 
+    int index = 0;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.recycler_view_frag, container, false);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        mRecyclerView = (MyRecycleView) rootView.findViewById(R.id.recyclerView);
         btn = (Button)rootView.findViewById(R.id.btn);
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
-
-        mDataset = new ArrayList();
-        mDataset.add(null);
-        mAdapter = new CustomAdapter(mDataset,mRecyclerView, (LinearLayoutManager) mLayoutManager);
-        buildData();
-        mRecyclerView.setAdapter(mAdapter);
 
         mLinearLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.linear_layout_rb);
         mLinearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
@@ -91,40 +86,125 @@ public class RecyclerViewFragment extends Fragment {
             }
         });
 
-        mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+        final MyPresenterSelector presenterSelector = new MyPresenterSelector();
+
+        presenterSelector.addPresenter(Header.class,new HeaderPresenter());
+
+        presenterSelector.addPresenter(Item.class,new NormalPresenter());
+
+        presenterSelector.addPresenter(Footer.class,new LoadingPresenter());
+
+        final ArrayObjectAdapter arrayObjectAdapter = new ArrayObjectAdapter(presenterSelector);
+        arrayObjectAdapter.add(new Header());
+
+        for(int i=0;i<10;i++){
+            index++;
+            Item item1 = new Item();
+            item1.setI(index);
+            arrayObjectAdapter.add(item1);
+        }
+
+        final ItemBridgeAdapter itemBridgeAdapter = new ItemBridgeAdapter(arrayObjectAdapter);
+        mRecyclerView.setAdapter(itemBridgeAdapter);
+
+        final Footer footer = new Footer();
+        mRecyclerView.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
+                arrayObjectAdapter.add(footer);
                 new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        mAdapter.hideLoading();
-                        buildData();
-                        mAdapter.loadMoreComplete();
+                    @Override
+                    public void run() {
+                        for(int i=0;i<10;i++){
+                            index++;
+                            Item item1 = new Item();
+                            item1.setI(index);
+                            arrayObjectAdapter.add(item1);
+                        }
+                        itemBridgeAdapter.notifyItemInserted(itemBridgeAdapter.getItemCount()-2);
+//                        mAdapter.notifyItemInserted(mDataset.size()-2);
+                        arrayObjectAdapter.remove(footer);
+                        mRecyclerView.setLoaded();
                     }
-                }, 5000);
+                },2000);
             }
         });
+
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < DATASET_COUNT; i++) {
-                    User user = new User();
-                    user.setEmail("fuck@163.com");
-                    user.setName("BBBBB = ");
-                    mDataset.add(user);
-                }
-                mAdapter.notifyItemInserted(mDataset.size()-2);
+
             }
         });
+
         return rootView;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
         int scrollPosition = 0;
 
         // If a layout manager has already been set, get current scroll position.
         if (mRecyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                    .findFirstCompletelyVisibleItemPosition();
+            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
         }
 
         switch (layoutManagerType) {
@@ -145,19 +225,4 @@ public class RecyclerViewFragment extends Fragment {
         mRecyclerView.scrollToPosition(scrollPosition);
     }
 
-
-    int j=0;
-    private void buildData(){
-        for (int i = 0; i < DATASET_COUNT; i++) {
-            j++;
-            User user = new User();
-            user.setEmail("fuck@163.com");
-            user.setName("KKKK = " + j);
-            mDataset.add(user);
-            mAdapter.notifyItemInserted(mDataset.size()-2);
-        }
-//        mAdapter.notifyItemInserted(mDataset.size());
-//        mAdapter.notifyDataSetChanged();
-//        mAdapter.notifyItemRangeInserted(mDataset.size()-2,10);
-    }
 }

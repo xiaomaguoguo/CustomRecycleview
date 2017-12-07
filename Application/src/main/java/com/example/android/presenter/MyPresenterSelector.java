@@ -27,14 +27,20 @@ public class MyPresenterSelector extends PresenterSelector {
 
     }
 
-    public void addPresenter(Object obj, Presenter presenter) {
-        if (!mPresenters.containsKey(obj)) {
-            mPresenters.put(obj,presenter);
+    public void addPresenter(Class clazz, Presenter presenter) {
+        if (!mPresenters.containsKey(clazz)) {
+            mPresenters.put(clazz,presenter);
+        }
+    }
+
+    public void removePresenter(Class clazz) {
+        if (mPresenters.containsKey(clazz)) {
+            mPresenters.remove(clazz);
         }
     }
 
     @Override
     public Presenter getPresenter(Object item) {
-        return mPresenters.get(item);
+        return mPresenters.get(item.getClass());
     }
 }
