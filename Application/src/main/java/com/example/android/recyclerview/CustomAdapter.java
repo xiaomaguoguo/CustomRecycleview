@@ -18,12 +18,11 @@ package com.example.android.recyclerview;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.android.User;
+import com.example.android.model.User;
 import com.example.android.callback.OnLoadMoreListener;
 import com.example.android.common.logger.Log;
 import com.example.android.viewholder.FooterViewHolder;

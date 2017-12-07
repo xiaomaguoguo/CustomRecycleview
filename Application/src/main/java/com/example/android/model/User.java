@@ -1,4 +1,4 @@
-package com.example.android;
+package com.example.android.model;
 
 /**
  * Created by KNothing on 2017/12/6.

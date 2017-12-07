@@ -29,7 +29,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 
-import com.example.android.User;
+import com.example.android.model.User;
 import com.example.android.presenter.HeaderPresenter;
 import com.example.android.presenter.LoadingPresenter;
 import com.example.android.presenter.MyPresenterSelector;
