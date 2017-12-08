@@ -72,6 +72,6 @@ public class MyLinearLayoutManager extends LinearLayoutManager{
             }
 
         }
-        return isAutoSkipNexPrePage ? true : super.requestChildRectangleOnScreen(parent, child, rect, immediate, focusedChildVisible);
+        return isAutoSkipNexPrePage || super.requestChildRectangleOnScreen(parent, child, rect, immediate, focusedChildVisible);
     }
 }
