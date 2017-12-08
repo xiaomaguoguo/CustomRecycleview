@@ -1,5 +1,6 @@
 package com.example.android.presenter;
 
+import android.graphics.Color;
 import android.support.v17.leanback.widget.Presenter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,17 @@ import com.example.android.recyclerview.R;
  */
 
 public class NormalPresenter extends Presenter {
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        return new NormalItem(LayoutInflater.from(parent.getContext()).inflate(R.layout.text_row_item, parent, false));
+        final View view =  LayoutInflater.from(parent.getContext()).inflate(R.layout.text_row_item, parent, false);
+        view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                view.setBackgroundColor(hasFocus ? Color.parseColor("#eeaabb") : Color.parseColor("#334599"));
+            }
+        });
+        return new NormalItem(view);
     }
 
     @Override

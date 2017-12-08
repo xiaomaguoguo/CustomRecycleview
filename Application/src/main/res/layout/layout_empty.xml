@@ -4,10 +4,9 @@
     android:id="@+id/textView"
     android:focusable="true"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="match_parent"
     android:text="没有数据，列表为空"
     android:gravity="center"
     android:textSize="20sp"
-    android:background="#778899"
     android:orientation="vertical" >
 </TextView>

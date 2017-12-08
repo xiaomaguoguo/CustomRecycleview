@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ItemBridgeAdapter;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,17 +43,14 @@ import com.example.android.widget.MyRecycleView;
 
 public class RecyclerViewFragment2 extends Fragment {
 
-    private static final int SPAN_COUNT = 2;
-
-    private enum LayoutManagerType {GRID_LAYOUT_MANAGER, LINEAR_LAYOUT_MANAGER}
-
-    protected LayoutManagerType mCurrentLayoutManagerType;
+    private static final int SPAN_COUNT = 4;
 
     protected RadioButton mLinearLayoutRadioButton;
+
     protected RadioButton mGridLayoutRadioButton;
 
     protected MyRecycleView mRecyclerView;
-    protected RecyclerView.LayoutManager mLayoutManager;
+
     private Button btn;
 
     int index = 0;
@@ -64,15 +62,15 @@ public class RecyclerViewFragment2 extends Fragment {
         mRecyclerView = (MyRecycleView) rootView.findViewById(R.id.recyclerView);
         btn = (Button)rootView.findViewById(R.id.btn);
         
-        mLayoutManager = new MyLinearLayoutManager(getActivity());
-        mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
+        final MyLinearLayoutManager mLayoutManager = new MyLinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
         mLinearLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.linear_layout_rb);
         mLinearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
+                mRecyclerView.setLayoutManager(mLayoutManager);
             }
         });
 
@@ -80,17 +78,18 @@ public class RecyclerViewFragment2 extends Fragment {
         mGridLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER);
+                MyGridLayoutManager myGridLayoutManager = new MyGridLayoutManager(getActivity(),SPAN_COUNT);
+                mRecyclerView.setLayoutManager(myGridLayoutManager);
             }
         });
 
         final MyPresenterSelector presenterSelector = new MyPresenterSelector();
 
-        presenterSelector.addPresenter(Header.class,new HeaderPresenter());
+        presenterSelector.configSupportType(Header.class,new HeaderPresenter());
 
-        presenterSelector.addPresenter(Item.class,new NormalPresenter());
+        presenterSelector.configSupportType(Item.class,new NormalPresenter());
 
-        presenterSelector.addPresenter(Footer.class,new LoadingPresenter());
+        presenterSelector.configSupportType(Footer.class,new LoadingPresenter());
 
         final ArrayObjectAdapter arrayObjectAdapter = new ArrayObjectAdapter(presenterSelector);
         arrayObjectAdapter.add(new Header());
@@ -120,7 +119,6 @@ public class RecyclerViewFragment2 extends Fragment {
                             arrayObjectAdapter.add(item1);
                         }
                         itemBridgeAdapter.notifyItemInserted(itemBridgeAdapter.getItemCount()-2);
-//                        mAdapter.notifyItemInserted(mDataset.size()-2);
                         arrayObjectAdapter.remove(footer);
                         mRecyclerView.loadComplete();
                     }
@@ -137,90 +135,6 @@ public class RecyclerViewFragment2 extends Fragment {
         });
 
         return rootView;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
-        int scrollPosition = 0;
-
-        // If a layout manager has already been set, get current scroll position.
-        if (mRecyclerView.getLayoutManager() != null) {
-            scrollPosition = ((MyLinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-        }
-
-        switch (layoutManagerType) {
-            case GRID_LAYOUT_MANAGER:
-                mLayoutManager = new MyGridLayoutManager(getActivity(), SPAN_COUNT);
-                mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
-                break;
-            case LINEAR_LAYOUT_MANAGER:
-                mLayoutManager = new MyLinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-                break;
-            default:
-                mLayoutManager = new MyLinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        }
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.scrollToPosition(scrollPosition);
     }
 
 }

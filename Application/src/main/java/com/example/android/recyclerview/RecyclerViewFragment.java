@@ -38,7 +38,7 @@ import java.util.ArrayList;
 public class RecyclerViewFragment extends Fragment {
 
     private static final String TAG = "RecyclerViewFragment";
-    private static final int SPAN_COUNT = 2;
+    private static final int SPAN_COUNT = 4;
     private static final int DATASET_COUNT = 10;
 
     private enum LayoutManagerType {
