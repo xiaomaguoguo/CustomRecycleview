@@ -102,7 +102,7 @@ public class MyGridLayoutManager extends GridLayoutManager{
             }
 
         }
-        return isAutoSkipNexPrePage ? true : super.requestChildRectangleOnScreen(parent, child, rect, immediate, focusedChildVisible);
+        return isAutoSkipNexPrePage || super.requestChildRectangleOnScreen(parent, child, rect, immediate, focusedChildVisible);
     }
 
     /*@Override
