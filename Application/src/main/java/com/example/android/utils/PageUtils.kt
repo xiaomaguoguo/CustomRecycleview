@@ -2,9 +2,7 @@ package com.example.android.utils
 
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.View
 import com.example.android.widget.MyRecycleView
 
 /**
@@ -40,8 +38,8 @@ object PageUtils {
             mRecycleView.smoothScrollBy(0, outLocation[1] + completeView.height)
         } else if (mRecycleView.layoutManager is LinearLayoutManager) {
             mRecycleView.smoothScrollBy(outLocation[0] + completeView.width, 0)
+            mRecycleView.requestLastItemFocus()
         }
-        mRecycleView.requestLastItemFocus()
     }
 
     /**
@@ -67,8 +65,8 @@ object PageUtils {
             mRecycleView.smoothScrollBy(0, -(outLocation[1] + completeView.height * 2))
         } else if (mRecycleView.layoutManager is LinearLayoutManager) {
             mRecycleView.smoothScrollBy(outLocation[0] - mRecycleView.width, 0)
+            mRecycleView.requestFirstItemFocus()
         }
-        mRecycleView.requestFirstItemFocus()
     }
 
 }
