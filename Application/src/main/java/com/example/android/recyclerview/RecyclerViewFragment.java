@@ -18,8 +18,6 @@ package com.example.android.recyclerview;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v17.leanback.widget.ArrayObjectAdapter;
-import android.support.v17.leanback.widget.ItemBridgeAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,8 +28,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 
-import com.example.android.callback.OnLoadMoreListener;
-import com.example.android.model.User;
+import com.bftv.fui.recycleview.R;
+import com.bftv.fui.recycleview.callback.OnLoadMoreListener;
+import com.bftv.fui.recycleview.model.User;
+import com.bftv.fui.recycleview.widget.CustomAdapter;
 
 import java.util.ArrayList;
 

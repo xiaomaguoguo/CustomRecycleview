@@ -22,24 +22,24 @@ import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ItemBridgeAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 
-import com.example.android.callback.OnLoadMoreListener;
-import com.example.android.layoutmanager.MyGridLayoutManager;
-import com.example.android.layoutmanager.MyLinearLayoutManager;
-import com.example.android.model.Footer;
-import com.example.android.model.Header;
-import com.example.android.model.Item;
-import com.example.android.presenter.HeaderPresenter;
-import com.example.android.presenter.LoadingPresenter;
-import com.example.android.presenter.MyPresenterSelector;
-import com.example.android.presenter.NormalPresenter;
-import com.example.android.widget.MyRecycleView;
+import com.bftv.fui.recycleview.R;
+import com.bftv.fui.recycleview.callback.OnLoadMoreListener;
+import com.bftv.fui.recycleview.layoutmanager.MyGridLayoutManager;
+import com.bftv.fui.recycleview.layoutmanager.MyLinearLayoutManager;
+import com.bftv.fui.recycleview.model.Footer;
+import com.bftv.fui.recycleview.model.Header;
+import com.bftv.fui.recycleview.model.Item;
+import com.bftv.fui.recycleview.presenter.HeaderPresenter;
+import com.bftv.fui.recycleview.presenter.LoadingPresenter;
+import com.bftv.fui.recycleview.presenter.MyPresenterSelector;
+import com.bftv.fui.recycleview.presenter.NormalPresenter;
+import com.bftv.fui.recycleview.widget.MyRecycleView;
 
 public class RecyclerViewFragment2 extends Fragment {
 

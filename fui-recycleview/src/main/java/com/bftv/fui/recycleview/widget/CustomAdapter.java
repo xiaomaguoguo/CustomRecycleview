@@ -14,21 +14,22 @@
 * limitations under the License.
 */
 
-package com.example.android.recyclerview;
+package com.bftv.fui.recycleview.widget;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.android.model.User;
-import com.example.android.callback.OnLoadMoreListener;
-import com.example.android.common.logger.Log;
-import com.example.android.viewholder.FooterViewHolder;
-import com.example.android.viewholder.HeaderViewHolder;
-import com.example.android.viewholder.ItemViewHolder;
-import com.example.android.viewholder.LoadingViewHolder;
+import com.bftv.fui.recycleview.R;
+import com.bftv.fui.recycleview.callback.OnLoadMoreListener;
+import com.bftv.fui.recycleview.model.User;
+import com.bftv.fui.recycleview.viewholder.FooterViewHolder;
+import com.bftv.fui.recycleview.viewholder.HeaderViewHolder;
+import com.bftv.fui.recycleview.viewholder.ItemViewHolder;
+import com.bftv.fui.recycleview.viewholder.LoadingViewHolder;
 
 import java.util.ArrayList;
 

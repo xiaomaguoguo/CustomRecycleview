@@ -30,5 +30,5 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="20sp"
-        android:text="@string/element_text"/>
+        android:text="Element"/>
 </FrameLayout>
