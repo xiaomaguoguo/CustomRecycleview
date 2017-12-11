@@ -56,23 +56,6 @@ public class MyGridLayoutManager extends GridLayoutManager{
         return super.requestChildRectangleOnScreen(parent, child, rect, immediate);
     }
 
-    /*@Override
-    public boolean onRequestChildFocus(RecyclerView parent, RecyclerView.State state, View child, View focused) {
-        int childPosition = getPosition(child);
-        int focusedPosition = getPosition(focused);
-        if (DEBUG){
-            Log.d(TAG,"onRequestChildFocus AAAAAAAAA childPosition = " + childPosition + "; focusedPosition = " + focusedPosition);
-        }
-
-        if (childPosition > findLastCompletelyVisibleItemPosition() || focusedPosition > findLastCompletelyVisibleItemPosition()){
-           if (DEBUG){
-               Log.d(TAG,"此处要执行下一页的逻辑 ？？");
-           }
-        }
-
-        return super.onRequestChildFocus(parent, state, child, focused);
-    }*/
-
     @Override
     public boolean requestChildRectangleOnScreen(RecyclerView parent, View child, Rect rect, boolean immediate, boolean focusedChildVisible) {
 
