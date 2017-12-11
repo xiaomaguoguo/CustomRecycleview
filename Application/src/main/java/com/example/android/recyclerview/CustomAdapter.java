@@ -147,7 +147,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         }else {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
-            loadingViewHolder.progressBar.setIndeterminate(true);
+            loadingViewHolder.getProgressBar().setIndeterminate(true);
         }
     }
     @Override
