@@ -24,7 +24,7 @@ object PageUtils {
         val lastItemPosition = llm.findLastVisibleItemPosition()
         if (lastItemCompletelyPosition == mRecycleView.childCount) {
             if (mRecycleView.mOnHeadFooterListener != null)
-                mRecycleView.mOnHeadFooterListener.onFooter()
+                mRecycleView.mOnHeadFooterListener?.onFooter()
             if (DEBUG) {
                 Log.d(TAG, "已经到最后一个item了，直接return")
             }
@@ -52,7 +52,7 @@ object PageUtils {
         val firstItemCompletePosition = llm.findFirstCompletelyVisibleItemPosition()
         if (firstItemCompletePosition == 0) {
             if(mRecycleView.mOnHeadFooterListener != null){
-                mRecycleView.mOnHeadFooterListener.onHeader()
+                mRecycleView.mOnHeadFooterListener?.onHeader()
             }
             if (DEBUG) {
                 Log.d(TAG, "已经到最前面了，直接return")
