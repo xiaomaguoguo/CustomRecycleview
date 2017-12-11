@@ -1,7 +1,6 @@
 package com.example.android.widget;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import com.example.android.callback.OnHeadFooterListener;
 import com.example.android.callback.OnLoadMoreListener;
 
 /**
@@ -47,6 +47,11 @@ public class MyRecycleView extends RecyclerView {
      * 加载更多回调
      */
     private OnLoadMoreListener mOnLoadMoreListener;
+
+    /**
+     * 该列表控件滚动到最前或者最后的回调
+     */
+    public OnHeadFooterListener mOnHeadFooterListener;
 
     public MyRecycleView(Context context) {
         super(context);
@@ -104,6 +109,14 @@ public class MyRecycleView extends RecyclerView {
      */
     public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
         this.mOnLoadMoreListener = mOnLoadMoreListener;
+    }
+
+    /**
+     * 设置滚动到最前或者最后的回调
+     * @param mOnHeadFooterListener
+     */
+    public void setOnHeadFooterListener(OnHeadFooterListener mOnHeadFooterListener){
+        this.mOnHeadFooterListener = mOnHeadFooterListener;
     }
 
     /**
