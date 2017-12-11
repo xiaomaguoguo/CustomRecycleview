@@ -96,6 +96,10 @@ public class MyRecycleView extends RecyclerView {
                 break;
 
 
+            case SCROLL_STATE_DRAGGING: // 还在滚动的时候
+                break;
+
+
 
             default:
                 break;
